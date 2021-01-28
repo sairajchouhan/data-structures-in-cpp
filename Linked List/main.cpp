@@ -11,8 +11,7 @@ int main()
     l.add_node(arr[i]);
 
   l.display_ll();
-  l.nth_node_from_start(4);
-  l.nth_node_from_end(4);
+  l.reverse_ll();
   l.display_ll();
 
   return 0;

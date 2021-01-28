@@ -41,6 +41,7 @@ public:
   }
 
   Node *get_head();
+  void reverse_ll();
   void add_node(int data);
   void add_to_head(int data);
   void add_to_tail(int data);
@@ -54,6 +55,20 @@ public:
   void nth_node_from_end(int n);
   void delete_ll();
 };
+
+void LinkedList::reverse_ll()
+{
+  Node *current, *previous = nullptr, *next = nullptr;
+  current = head;
+  while (current != nullptr)
+  {
+    next = current->next;
+    current->next = previous;
+    previous = current;
+    current = next;
+  }
+  head = previous;
+}
 
 bool LinkedList::check_node_exists(int n)
 {
