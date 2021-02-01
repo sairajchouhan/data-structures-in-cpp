@@ -19,6 +19,8 @@ public:
   int pop();
   void display();
   int peek(int pos);
+  int is_empty();
+  int is_full();
   int stack_top();
 };
 
@@ -85,14 +87,25 @@ int Stack::peek(int pos)
   return current->data;
 }
 
-int Stack::stack_top()
+int Stack::is_full()
 {
-  if (top == nullptr)
-    return -1;
-  else
-    return top->data;
+  Node *t = new Node;
+  int res = t ? 1 : 0;
+  delete t;
+  return res;
 }
 
+int Stack::is_empty()
+{
+  return top ? 0 : 1;
+}
+
+int Stack::stack_top()
+{
+  if (top)
+    return top->data;
+  return -1;
+}
 int main()
 {
 
