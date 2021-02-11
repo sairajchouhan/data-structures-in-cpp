@@ -69,8 +69,6 @@ void Tree::createTree()
       q.push(temp);
     }
   }
-
-  delete q;
 }
 
 void Tree::preOrder(Node *p)
@@ -118,7 +116,6 @@ void Tree::levelOrder(Node *p)
     if (current->rchild != nullptr)
       q.push(current->rchild);
   }
-  delete q;
 }
 
 int main()
