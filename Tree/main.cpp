@@ -35,10 +35,13 @@ public:
   void postOrder(Node *p);
   void inOrder(Node *p);
   void levelOrder(Node *p);
-  void height(Node *p);
   void preOrderIter(Node *p);
   void inOrderIter(Node *p);
   void postOrderIter(Node *p);
+  int height(Node *p);
+  int count(Node *p);
+  int countLeafs(Node *p);
+  int count2ndDegreeNodes(Node *p);
 };
 
 void Tree::createTree()
@@ -192,6 +195,66 @@ void Tree::postOrderIter(Node *p)
   }
 }
 
+int Tree::height(Node *p)
+{
+  int l = 0;
+  int r = 0;
+  Node *root = p;
+
+  if (root != nullptr)
+  {
+    l = height(root->lchild);
+    r = height(root->rchild);
+    if (l > r)
+      return l + 1;
+    else
+      return r + 1;
+  }
+  return -1;
+}
+
+int Tree::count(Node *p)
+{
+  int x{0}, y = {0};
+  if (p != nullptr)
+  {
+    x = count(p->lchild);
+    y = count(p->rchild);
+    return x + y + 1;
+  }
+  return 0;
+}
+
+int Tree::countLeafs(Node *p)
+{
+  int x{0}, y{0};
+  if (p != nullptr)
+  {
+    x = countLeafs(p->lchild);
+    y = countLeafs(p->rchild);
+    if (x == 0 && y == 0)
+      return x + y + 1;
+    else
+      return x + y;
+  }
+  return 0;
+}
+
+int Tree::count2ndDegreeNodes(Node *p)
+{
+  int x{0}, y{0};
+  if (p != nullptr)
+  {
+    x = countLeafs(p->lchild);
+    y = countLeafs(p->rchild);
+    if (x != 0 && y != 0)
+      return x + y + 1;
+    else
+      return x + y;
+  }
+  return 0;
+}
+
 int main()
 {
 
@@ -218,6 +281,11 @@ int main()
   cout << "PostOrder traversal using iteration: ";
   t.postOrderIter(t.root);
   cout << "\n----------------------------------------------------------" << endl;
+
+  cout << "Height of the tree is: " << t.height(t.root) << endl;
+  cout << "Number of nodes in the tree are: " << t.count(t.root) << endl;
+  cout << "Number of nodes with degree 2 are: " << t.count2ndDegreeNodes(t.root) << endl;
+  cout << "Number of leaf nodes in the tree are: " << t.countLeafs(t.root) << endl;
 
   return 0;
 }
