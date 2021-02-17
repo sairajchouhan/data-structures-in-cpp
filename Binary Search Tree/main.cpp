@@ -29,6 +29,11 @@ public:
   void insert(int data);
   void inorder(Node *p);
   Node *search(int data);
+  Node *recInsert(Node *p, int data);
+  Node *recDelete(Node *p, int key);
+  int height(Node *p);
+  Node *inorderPre(Node *p);
+  Node *inorderSucc(Node *p);
 };
 
 Node *BinarySearchTree::getRoot()
@@ -98,32 +103,111 @@ Node *BinarySearchTree::search(int data)
   return nullptr;
 }
 
+Node *BinarySearchTree::recInsert(Node *p, int data)
+{
+  if (root == nullptr)
+  {
+    Node *new_node = new Node(data);
+    root = new_node;
+    return new_node;
+  }
+  if (p == nullptr)
+  {
+    Node *new_node = new Node(data);
+    return new_node;
+  }
+  if (data < p->data)
+    p->lchild = recInsert(p->lchild, data);
+  else if (data > p->data)
+    p->rchild = recInsert(p->rchild, data);
+
+  return p;
+}
+
+Node *BinarySearchTree::recDelete(Node *p, int key)
+{
+
+  if (p == nullptr)
+  {
+    return nullptr;
+  }
+
+  if (p->lchild == nullptr && p->rchild == nullptr)
+  {
+    if (p == root)
+    {
+      root = nullptr;
+    }
+    delete p;
+    return nullptr;
+  }
+
+  if (key < p->data)
+    p->lchild = recDelete(p->lchild, key);
+  else if (key > p->data)
+    p->rchild = recDelete(p->rchild, key);
+  else
+  {
+    Node *q{nullptr};
+    if (height(p->lchild) > height(p->rchild))
+    {
+      q = inorderPre(p->lchild);
+      p->data = q->data;
+      p->lchild = recDelete(p->lchild, q->data);
+    }
+    else
+    {
+      q = inorderSucc(p->rchild);
+      p->data = q->data;
+      p->rchild = recDelete(p->rchild, q->data);
+    }
+  }
+
+  return p;
+}
+
+int BinarySearchTree::height(Node *p)
+{
+  int x, y;
+  if (p == nullptr)
+  {
+    return 0;
+  }
+  x = height(p->lchild);
+  y = height(p->rchild);
+  return x > y ? x + 1 : y + 1;
+}
+
+Node *BinarySearchTree::inorderPre(Node *p)
+{
+  while (p && p->rchild != nullptr)
+  {
+    p = p->rchild;
+  }
+  return p;
+}
+
+Node *BinarySearchTree::inorderSucc(Node *p)
+{
+  while (p && p->lchild != nullptr)
+  {
+    p = p->lchild;
+  }
+  return p;
+}
+
 int main()
 {
 
   BinarySearchTree bst;
 
-  // Insert
-  bst.insert(10);
-  bst.insert(5);
-  bst.insert(20);
-  bst.insert(8);
-  bst.insert(30);
+  bst.recInsert(bst.getRoot(), 5);
+  bst.recInsert(bst.getRoot(), 10);
 
-  // Inorder traversal
+  bst.recDelete(bst.getRoot(), 5);
+
   bst.inorder(bst.getRoot());
   cout << endl;
-
-  // Search
-  Node *temp = bst.search(5);
-  if (temp != nullptr)
-  {
-    cout << temp->data << endl;
-  }
-  else
-  {
-    cout << "Element not found" << endl;
-  }
 
   return 0;
 }
