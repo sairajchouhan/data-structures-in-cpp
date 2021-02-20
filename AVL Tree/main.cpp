@@ -28,8 +28,14 @@ public:
   Node *LRRotation(Node *p);
   Node *RRRotation(Node *p);
   Node *RLRotation(Node *p);
+  Node *inorderPre(Node *p);
+  Node *inorderSucc(Node *p);
+  Node *recDelete(Node *p, int key);
 
-  AVL() { root = nullptr; }
+  AVL()
+  {
+    root = nullptr;
+  }
 };
 
 Node *AVL::LLRotation(Node *p)
@@ -169,6 +175,88 @@ void AVL::inorder(Node *p)
     cout << p->data << " " << flush;
     inorder(p->rchild);
   }
+}
+
+Node *AVL::recDelete(Node *p, int key)
+{
+
+  if (p == nullptr)
+    return nullptr;
+
+  if (p->lchild == nullptr && p->rchild == nullptr)
+  {
+    if (p == root)
+    {
+      root = nullptr;
+    }
+    delete p;
+    return nullptr;
+  }
+
+  if (key < p->data)
+    p->lchild = recDelete(p->lchild, key);
+  else if (key > p->data)
+    p->rchild = recDelete(p->rchild, key);
+  else
+  {
+    Node *q{nullptr};
+    if (nodeHeight(p->lchild) > nodeHeight(p->rchild))
+    {
+      q = inorderPre(p->lchild);
+      p->data = q->data;
+      p->lchild = recDelete(p->lchild, q->data);
+    }
+    else
+    {
+      q = inorderSucc(p->rchild);
+      p->data = q->data;
+      p->rchild = recDelete(p->rchild, q->data);
+    }
+  }
+
+  p->height = nodeHeight(p);
+
+  // Balance Factor and Rotation
+  if (balanceFactor(p) == 2 && balanceFactor(p->lchild) == 1)
+  { // L1 Rotation
+    return LLRotation(p);
+  }
+  else if (balanceFactor(p) == 2 && balanceFactor(p->lchild) == -1)
+  { // L-1 Rotation
+    return LRRotation(p);
+  }
+  else if (balanceFactor(p) == -2 && balanceFactor(p->rchild) == -1)
+  { // R-1 Rotation
+    return RRRotation(p);
+  }
+  else if (balanceFactor(p) == -2 && balanceFactor(p->rchild) == 1)
+  { // R1 Rotation
+    return RLRotation(p);
+  }
+  else if (balanceFactor(p) == 2 && balanceFactor(p->lchild) == 0)
+  { // L0 Rotation
+    return LLRotation(p);
+  }
+  else if (balanceFactor(p) == -2 && balanceFactor(p->rchild) == 0)
+  { // R0 Rotation
+    return RRRotation(p);
+  }
+
+  return p;
+}
+
+Node *AVL::inorderPre(Node *p)
+{
+  while (p && p->rchild != nullptr)
+    p = p->rchild;
+  return p;
+}
+
+Node *AVL::inorderSucc(Node *p)
+{
+  while (p && p->lchild != nullptr)
+    p = p->lchild;
+  return p;
 }
 
 int main()

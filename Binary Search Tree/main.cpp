@@ -128,9 +128,7 @@ Node *BinarySearchTree::recDelete(Node *p, int key)
 {
 
   if (p == nullptr)
-  {
     return nullptr;
-  }
 
   if (p->lchild == nullptr && p->rchild == nullptr)
   {
