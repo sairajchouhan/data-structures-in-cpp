@@ -39,6 +39,37 @@ public:
         currentHeapSize++;
     }
 
+    int del()
+    {
+        int res = {0};
+        res = heap[1];
+        heap[1] = heap[currentHeapSize];
+        currentHeapSize--;
+
+        int i = 1;
+        while (heap[i] < heap[2 * i] || heap[i] < heap[2 * i + 1])
+        {
+            int leftSub = heap[i] - heap[2 * i];
+            int rightSub = heap[i] - heap[2 * i + 1];
+            if (leftSub < rightSub)
+            {
+                int temp = heap[i];
+                heap[i] = heap[2 * i];
+                heap[2 * i] = temp;
+                i = 2 * i;
+            }
+            if (leftSub > rightSub)
+            {
+                int temp = heap[i];
+                heap[i] = heap[2 * i + 1];
+                heap[2 * i + 1] = temp;
+                i = 2 * i + 1;
+            }
+        }
+
+        return res;
+    }
+
     void printHeap()
     {
         if (currentHeapSize == 0)
@@ -53,8 +84,8 @@ public:
 
 int main()
 {
-
     Heap h(10);
+
     h.insert(30);
     h.insert(20);
     h.insert(15);
@@ -64,7 +95,9 @@ int main()
     h.insert(6);
     h.insert(40);
     h.insert(35);
-    h.printHeap();
 
+    cout << h.del() << endl;
+    cout << h.del() << endl;
+    h.printHeap();
     return 0;
 }
